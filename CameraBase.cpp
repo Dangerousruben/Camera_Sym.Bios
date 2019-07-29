@@ -20,15 +20,11 @@ void UCameraBase::BeginPlay()
 //Param[in] unint32 : An index that is always zero as of 4.10, I don't know what it is used for, it is necessary for the delegate ViewportResizedEvent, is unnamed because I am not using it
 inline void UCameraBase::SetViewportSize(FViewport*, uint32)
 {
-//In the editor the viewport can be invalid
-#if WITH_EDITOR
+if (!GEngine->GameViewport)
+{
+	return;
+}
 
-	if (!GEngine->GameViewport)
-	{
-		return;
-	}
-
-#endif
 	m_ViewportSize = UWidgetLayoutLibrary::GetViewportSize(GetWorld()) / UWidgetLayoutLibrary::GetViewportScale(GEngine->GameViewport);
 
 	//Doing these calculations now saves 2 calculations per tick
